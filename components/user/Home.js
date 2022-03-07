@@ -7,9 +7,14 @@ import Logout from "./logout";
 import About from "./About";
 import User_info from "./User_info";
 import CameraImp from "./CameraImp"
+import ProfileStack from './ProfileStack';
+//import Search from './Search'
+//import DisplayPost from './DisplayPost';
+import UpdatePost from './UpdatePost';
 import Profile from './UserProfile';
-import Search from './Search'
-import Post from './Post';
+//import FriendRequests from './FriendRequests'
+//<Drawer.Screen name="Profile" component={ProfileStack}/>
+//<Drawer.Screen name="Profile" component={Profile}/>
 
 const Drawer = createDrawerNavigator();
 
@@ -18,14 +23,12 @@ const Drawer = createDrawerNavigator();
 class Home extends Component{
     render(){
         return(
-            <Drawer.Navigator initialRouteName="About">
+            <Drawer.Navigator initialRouteName="Profile">
                 <Drawer.Screen name="About" component={About} />
                 <Drawer.Screen name="Logout" component={Logout} />
                 <Drawer.Screen name="User_info" component={User_info}/>
                 <Drawer.Screen name="CameraImp" component={CameraImp}/>
-                <Drawer.Screen name="Profile" component={Profile}/>
-                <Drawer.Screen name="Search" component={Search}/>
-                <Drawer.Screen name="Post" component={Post}/>
+                <Drawer.Screen name="Profile" component={ProfileStack}/>
             </Drawer.Navigator>
         )
     }

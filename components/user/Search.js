@@ -16,92 +16,34 @@ class SearchForFriend extends Component {
     }
 
     getData = async () => {
-        let data = await AsyncStorage.getItem('@spacebook_details');
-        let session_data = JSON.parse( data )
-       
-        fetch(`http://localhost:3333/api/1.0.0/search`,{
-            method: 'GET',
-            headers: {
-                'x-authorization': session_data.token
-            },
-        })
-    
-        .then( (response) => response.json() )
-        .then( (responseJson) => {
-            this.setState({
-                isLoading: false,
-                search_results: responseJson,
-                })
-        })
-        .catch( (error) =>{
-            console.error(error)
-        })
-        //http://localhost:3333/api/1.0.0/search?limit=5`
-        //`http://localhost:3333/api/1.0.0/search?q=${this.state.search}`
-
-    }
-    componentDidMount(){
-        this.getData()
-    }
-
-    addFriend = async () => {
       let data = await AsyncStorage.getItem('@spacebook_details');
       let session_data = JSON.parse( data )
-      //let id = this.state.id
-      //the ID is the your firend i want to sent request
-      fetch(`http://localhost:3333/api/1.0.0/user/20/friends`,{
-          method: 'POST',
+     
+      fetch(`http://localhost:3333/api/1.0.0/search?q=${this.state.search}`,{
+          method: 'GET',
           headers: {
               'x-authorization': session_data.token
           },
       })
-      .then( (response) => {
-          //console.log(response);
-          console.log('User updated');
-          //this.getData();
+      // I need to check the response and make condition check
+      .then( (response) => response.json() )
+      .then( (responseJson) => {
+          
+          this.setState({
+          isLoading: false,
+          search_results: responseJson  })
       })
-
-      .then( (error) => {
-          console.error(error);
+      .catch( (error) =>{
+          console.error(error)
       })
-      
-  }
+   }
+  
+    componentDidMount(){
+        this.getData()
+    }
+
+
     
-    
-   /*
-    searchFunction = (text) => {
-        const updatedData = this.arrayholder.filter((item) => {
-          const item_data = `${item.user_givenname.toUpperCase()})`;
-          const text_data = text.toUpperCase();
-          return item_data.indexOf(text_data) > -1;
-        });
-        this.setState({ search_results: updatedData, searchValue: text });
-      };
-
-
-      filterList example
-      <View>
-               <View>
-               <TextInput
-                    onChangeText={(search) => this.setState({search})}
-                    style={styles.searchBar}
-                    />
-                    {this.filterList(names).map((listItem, index) => (
-                    <Text style={styles.text} key={index}>{ listItem.user_givenname } { listItem.user_familyname }</Text>
-                    ))}
-               </View>
-
-            </View>
-            <View style={styles.button}> 
-                    <Button
-                    title="AddFriend"
-                    onPress={()=>this.addFriend()}/>
-                </View>
-      */
-      //filterList(names) {
-        //return names.filter(listItem => listItem.user_givenname.toLowerCase().includes(this.state.search.toLowerCase()));
-     // }
-
     render() {
       const nav = this.props.navigation;
       const getProfile = (user_id) => {
@@ -113,13 +55,22 @@ class SearchForFriend extends Component {
         return(
 
           <View style={styles.container}>
-            <View>
-              <TextInput
-                     //value={query}
-                     placeholder="Search"
-                      onChangeText={(search) => this.setState({search})}
-                      //style={styles.searchBar}
-                      />
+            <View style={styles.searchContainer}>
+              <View style={styles.searchField}>
+                <TextInput
+                      placeholder="Search"
+                      style={styles.search}
+                      onChangeText={(text) => this.setState({"search": text})}
+                      value={this.state.search}
+                        />
+              </View>
+              <View style={styles.searchButton}> 
+                  <Button onPress={() => this.getData()} 
+                    style={styles.addButton}
+                    title='Search'>
+                      <Text>Search!</Text>
+                  </Button>
+              </View>
             </View>
             <View style={styles.listContainer}>
                 
@@ -130,20 +81,6 @@ class SearchForFriend extends Component {
                       <TouchableOpacity onPress={() => getProfile(item.user_id)}>
                          <Text style={styles.text}>{item.user_givenname} {item.user_familyname}</Text>
                         </TouchableOpacity>
-                      
-                      <View style={styles.buttonContainer}>
-                        
-                          <View style={styles.button}> 
-                              <Button
-                              title="Confirm"
-                              onPress={()=>this.acceptRequest()}/>
-                          </View>
-                          < View style={styles.removeButton}> 
-                              <Button
-                              title="Remove"
-                              onPress={()=>this.removeFriend()}/>
-                          </View>
-                      </View>
                   </View>
                   )}
                   keyExtractor={(item,index)=> item.user_id.toString()}
@@ -164,6 +101,11 @@ const styles = StyleSheet.create({
       //alignItems:'center',
       //justifyContent:'center'
       justifyContent: 'space-between'
+    },
+    searchContainer: {
+      //alignItems:'center',
+      flexDirection: 'row',
+      //justifyContent: 'space-between'
     },
     listContainer: {
         flexDirection: 'row',
@@ -194,21 +136,47 @@ const styles = StyleSheet.create({
       //marginTop: 20,
       
   },
-  button:{
+  searchButton:{
       elevation: 8,
       borderRadius: 10,
-      margin: 10,
-      width: 85,
-      height: 20,      
+      margin: 5,
+      padding: 10,
+      width: 100,
+      height: 15,      
   },
-  removeButton:{
+   button:{
+    elevation: 8,
+    borderRadius: 10,
+    margin: 10,
+    width: 100,
+    height: 15,      
+},
+  addButton:{
       elevation: 8,
       borderRadius: 10,
       margin: 10,
       width: 85,
-      height: 20, 
+      height: 15, 
       backgroundColor:'#eee',     
   },
+  search:{
+    elevation: 8,
+    borderRadius: 10,
+    margin: 10,
+    width: 180,
+    height: 40, 
+    padding: 10,
+    backgroundColor:'#8ec3eb', 
+    fontSize: 20,
+    fontFamily: "Cochin",   
+},
+  searchField:{
+    //elevation: 8,
+    //borderRadius: 10,
+    //margin: 10,
+    //width: 180,
+    //height: 30,      
+},
 });
 
 

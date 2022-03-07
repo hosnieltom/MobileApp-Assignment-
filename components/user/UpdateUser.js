@@ -6,47 +6,64 @@ class UpdateUser extends Component {
 
     constructor( props ) {
         super( props )
+
         this.state = {
             user_information : [],
             first_name : '',
             last_name : '',
             email : '',
-            friend_count : '',
+            password : '',
+            error: ''
         }
     }
 
     getData = async () => {
-        let data = await AsyncStorage.getItem('@spacebook_details')
-        let session_data = JSON.parse(data)
-        let user_id = session_data.id
-        console.log(user_id)
-        fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
+
+        let data = await AsyncStorage.getItem( '@spacebook_details' )
+        let session_data = JSON.parse( data )
+
+        let user_id = null;
+        if( typeof this.props.route.params === 'undefined' ) {
+          user_id = session_data.id
+        }
+        else
+          user_id = this.props.route.params.user_id;
+        
+        fetch(`http://localhost:3333/api/1.0.0/user/${ user_id }`, {
             method: 'Get',
             headers: {
                 'x-authorization': session_data.token
             }
         })
-        .then(( response ) => response.json())
-        .then((responseJson) => {
+        .then(( response ) => response.json() )
+        .then(( responseJson ) => {
             this.setState({
                 isLoading : false,
                 user_information : responseJson
             })
         })
         .catch((error) => {
-            console.log(error)
+            this.setState( { error: error.message } )
         })
     }
 
     updateUser = async() => {
-        let data = await AsyncStorage.getItem('@spacebook_details')
-        let session_data = JSON.parse(data)
-        let user_id = session_data.id
+
+        let data = await AsyncStorage.getItem( '@spacebook_details' )
+        let session_data = JSON.parse( data )
+       
+        let user_id = null;
+        if( typeof this.props.route.params === 'undefined' ) {
+          user_id = session_data.id
+        }
+        else 
+          user_id = this.props.route.params.user_id;
+        
         let to_send={}
         let orig_first_name = this.state.user_information.first_name;
         let orig_last_name = this.state.user_information.last_name;
         let orig_email = this.state.user_information.email;
-        let orig_friend_count = this.state.user_information.friend_count;
+        let orig_password = this.state.user_information.password;
 
         if( this.state.first_name != orig_first_name ) {
         to_send['first_name'] = this.state.first_name; 
@@ -60,11 +77,9 @@ class UpdateUser extends Component {
             to_send['email'] = this.state.email
         }
 
-        if( this.state.friend_count != orig_friend_count ) {
-            to_send['friend_count'] = parseInt(this.state.friend_count)
+        if( this.state.password != orig_password ) {
+            to_send['password'] = this.state.password
         }
-
-        console.log(JSON.stringify(to_send))
 
         fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
             method : 'PATCH',
@@ -72,16 +87,45 @@ class UpdateUser extends Component {
                 'content-type': 'application/json',
                 'x-authorization': session_data.token
             },
-            body : JSON.stringify(to_send)
+            body : JSON.stringify( to_send )
         })
 
-        .then( (response) => {
-            console.log(response);
-            console.log('User updated');
+        .then( ( response ) => {
+            if( !response.ok ) {
+                if( this.state.first_name === '' )
+                  throw Error( 'First name is required' )
+
+                else if( this.state.last_name === '' )
+                  throw Error( 'Last name is required' )
+
+                else if( this.state.email === '' )
+                  throw Error( 'Email is required' )
+
+                else if( this.state.password === '' )
+                  throw Error( 'Password is required' )
+                else if ( response.status  === 400 ) 
+                  throw Error( 'Bad Request' ) 
+
+                else if ( response.status  === 401 ) 
+                  throw Error( 'You are Unauthorized' )
+
+                else if( response.status === 403 )
+                  throw Error( 'You are forbidden to make change' )
+
+                else if( response.status === 404 )
+                   throw Error( 'Page not found' )
+
+                else if ( response.status  === 500 ) 
+                  throw Error( 'Server Error' ) 
+
+                else 
+                  throw Error( 'Check your connection' )
+            }
+            this.setState( { first_name: '',last_name: '', email: '', password: '' } )
         })
 
-        .then( (error) => {
-            console.error(error);
+        .catch( (error) => {
+             this.setState( { error: error.message } )
         })
 
     }
@@ -91,44 +135,43 @@ class UpdateUser extends Component {
 
     render(){
         return (
-            /*
-            <TextInput
-                    placeholder="Enter user ID..."
-                    onChangeText={(user_id) => this.setState({user_id})}
-                    value={this.state.user_id}/>
-             */
-
             <View style={styles.container}> 
+               <View>
+                  <Text style={ styles.errorText }>{ this.state.error }</Text>
+               </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.titelText}>Update a User</Text>
 
                     <TextInput
+                        style={ styles.textInput }
                         placeholder="Enter new first name..."
                         onChangeText={(first_name) => this.setState({first_name})}
                         value={this.state.first_name}/>
 
                     <TextInput
+                        style={ styles.textInput }
                         placeholder="Enter new last name..."
                         onChangeText={(last_name)=> this.setState({last_name})}
                         value={this.state.last_name}/>
 
                     <TextInput
+                        style={ styles.textInput }
                         placeholder="Enter new email.."
                         onChangeText={(email)=> this.setState({email})}
                         value={this.state.email}/>
 
                     <TextInput
-                        placeholder="Enter new friend count..."
-                        onChangeText={(friend_count)=> this.setState({friend_count})}
-                        value={this.state.friend_count}/>
+                        style={ styles.textInput }
+                        placeholder="Enter new password..."
+                        secureTextEntry={true}
+                        onChangeText={(password)=> this.setState({password})}
+                        value={this.state.password}/>
                 </View>
                     <View style={styles.buttonContainer} >
                         <Button style={styles.button} title="Update user" 
                         onPress={()=> this.updateUser()}/>
-                    </View>
-                    
+                    </View> 
              </View>
-           
         )
     }
 }
@@ -140,15 +183,18 @@ const styles = StyleSheet.create({
         justifyContent:'center'
       },
       textContainer: {
-        flex:0.4,
-        //alignItems:'center',
-        //justifyContent:'center'
+        justifyContent:'center',
         justifyContent: 'space-between'
       },
       text: {
         fontSize: 18,
         fontFamily: "Cochin",
         marginTop: 12,
+      },
+      textInput: {
+        fontSize: 18,
+        fontFamily: "Cochin",
+        marginTop: 20,
       },
       titelText: {
         color: 'blue',
@@ -157,26 +203,28 @@ const styles = StyleSheet.create({
         fontFamily: "Cochin",
         marginTop: 12,
       },
+      errorText: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontFamily: "Cochin", 
+        fontSize: 18,
+      },
     inputField: {
        padding: 14,
       fontSize: 22,
-      width: '90%'
+      width: '90%',
+      marginTop: 10
     },
     buttonContainer:{
-        flex:0.7,
-        //flexDirection: 'row-reverse',
-        //justifyContent: 'center',
         justifyContent: 'space-between',
         marginTop: 20,
-        
     },
     button:{
         backgroundColor: "#009688",
         elevation: 8,
         borderRadius: 10,
         paddingVertical: 10,
-        paddingHorizontal: 12
-        
+        paddingHorizontal: 12 
     },
   });
 

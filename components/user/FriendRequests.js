@@ -3,7 +3,7 @@ import { Text, Button, View, StyleSheet, FlatList,ActivityIndicator,TextInput } 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import AcceptFriend from "./Friends";
 
-class Requests extends Component {
+class FriendRequests extends Component {
 
     constructor( props ) {
         super( props )
@@ -22,8 +22,7 @@ class Requests extends Component {
     getData = async () => {
         let data = await AsyncStorage.getItem('@spacebook_details')
         let session_data = JSON.parse(data)
-        let user_id = session_data.id
-       
+        
         fetch('http://localhost:3333/api/1.0.0/friendrequests', {
             method: 'Get',
             headers: {
@@ -47,11 +46,17 @@ class Requests extends Component {
 
         let data = await AsyncStorage.getItem('@spacebook_details')
         let session_data = JSON.parse(data)
-        let user_id = session_data.id
-        let id = this.state.friend_requests[0].user_id
-        console.log('hello'+this.state.friend_requests.user_id)
+        //let user_id = session_data.id
+        //let id = this.state.friend_requests[0].user_id
+        let user_id = null;
+        if(typeof this.props.route.params === 'undefined'){
+          user_id = session_data.id
+        }else{
+          console.log(this.props.route.params)
+          user_id = this.props.route.params.user_id;
+        }
         //the ID is the your firend request id
-        fetch(`http://localhost:3333/api/1.0.0/friendrequests/${id}`, {
+        fetch(`http://localhost:3333/api/1.0.0/friendrequests/${user_id}`, {
             method: 'POST',
             headers: {
                 'x-authorization': session_data.token
@@ -198,5 +203,5 @@ const styles = StyleSheet.create({
     },
   });
 
-export default Requests
+export default FriendRequests
 

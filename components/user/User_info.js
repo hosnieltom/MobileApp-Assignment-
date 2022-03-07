@@ -1,39 +1,30 @@
 import React, {Component} from "react";
-import { Text, View, Button,TextInput,ToHideAndShowComponent, StyleSheet} from "react-native";
+import { Text, View, Button,TextInput,ToHideAndShowComponent,ActivityIndicator,
+     StyleSheet} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 class UserInfo extends Component {
 
     constructor( props ) {
+
         super( props )
         this.state = {
             isLoading : true,
-            //showEdit : false,
             user_information : [],
-
-            // I need to check if I wanna use these fields
-            first_name : '',
-            last_name : '',
-            email : '',
-            friend_count : '',
+            error: ''
         }
     }
     
-    
-
     getData = async () => {
-        let data = await AsyncStorage.getItem('@spacebook_details')
-        let session_data = JSON.parse(data)
 
-        //let user_id = session_data.id
+        let data = await AsyncStorage.getItem( '@spacebook_details' )
+        let session_data = JSON.parse( data )
         let user_id = null;
-        if(typeof this.props.route.params === 'undefined'){
+        if( typeof this.props.route.params === 'undefined' ) {
           user_id = session_data.id
-        }else{
-          console.log(this.props.route.params)
-          user_id = this.props.route.params.user_id;
         }
+        else 
+          user_id = this.props.route.params.user_id;
         
         fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
             method: 'Get',
@@ -41,55 +32,37 @@ class UserInfo extends Component {
                 'x-authorization': session_data.token
             }
         })
-        .then(( response ) => response.json())
-        .then((responseJson) => {
+        .then(( response ) => {
+              
+            if( !response.ok ){
+                
+                if ( response.status  === 401 ) 
+                  throw Error( 'You are Unauthorized' )
+                    
+                else if ( response.status  === 404 ) 
+                  throw Error( 'Page not found' ) 
+
+                else if ( response.status  === 500 ) 
+                  throw Error( 'Server Error' ) 
+
+                else
+                  throw Error( 'Check server connection' )
+            }
+            return response.json();
+          })
+
+        .then( ( responseJson ) => {
+
             this.setState({
                 isLoading : false,
                 user_information : responseJson
             })
         })
         .catch((error) => {
-            console.log(error)
+            this.setState( { error: error.message } )
         })
       
     }
-
-    
-    /*
-    updateItem = (id)=>{
-
-    let to_send={}
-    if(this.state.item_name != this.state.orig_item_name){
-       to_send['item_name'] = this.state.item_name; 
-      }
-    if(this.state.description != this.state.orig_description){
-      to_send['discription'] = this.state.discription;
-    }
-    if(this.state.unit_price != this.state.orig_unit_price){
-      to_send['unit_price'] = parseInt(this.state.unit_price);
-    }
-    if(this.state.quantity != this.state.orig_quantity){
-      to_send['quantity'] = parseInt(this.state.quantity);
-    }
-
-    console.log(JSON.stringify(to_send))
-
-    return fetch("http://localhost:3333/list/2", {
-        method: 'PATCH',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify(to_send)
-    })
-    .then((response) => {
-      console.log("Item updated");
-      console.log(response)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-     */
 
     componentDidMount(){
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -105,7 +78,13 @@ class UserInfo extends Component {
 
         if(this.state.isLoading){
             return(
-                <View><Text>Loading...</Text></View>
+                <View>
+                    <Text>Loading...</Text>
+                    <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
+                    <ActivityIndicator
+                        size="large"
+                        color="#00ff00"/>
+                </View>
             )
         }
         else {
@@ -129,46 +108,16 @@ class UserInfo extends Component {
                         <Button style={styles.button} title="Edit details" 
                             onPress={()=> nav.navigate("UpdateUser")}/>
                     </View>
-                </View> ) }
-
-        
-   }
-    
-    /*
-if(this.state.isLoading){
-        return(
-            <View><Text>Loading...</Text></View>
-        )
+                </View> 
+            ) } 
+        }
     }
-    else{
-      console.log("here", this.state)
-      const nav = this.props.navigation;
-      return(
-        <View style={styles.container}>
-          <Text style={styles.text}>Home Screen</Text>
-          <View>
-              <Text>Login id: {this.state.login_info.id}</Text>
-              <Text>Login token: {this.state.login_info.token}</Text>
-          </View>
-          <Button style={styles.button} title="Home" 
-             onPress={()=> nav.navigate("Home")}/>
-        </View>
-      );
-    }
- */
-}
 
 const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems:'center',
         justifyContent:'center'
-      },
-      textContainer: {
-        flex:0.5,
-        //alignItems:'center',
-        //justifyContent:'center'
-        justifyContent: 'space-between'
       },
       text: {
         fontSize: 18,
@@ -182,6 +131,12 @@ const styles = StyleSheet.create({
         fontFamily: "Cochin",
         marginTop: 12,
       },
+      errorText: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontFamily: "Cochin", 
+        fontSize: 18,
+      },
     inputField: {
        padding: 14,
       fontSize: 22,
@@ -189,8 +144,6 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         flex:0.7,
-        //flexDirection: 'row-reverse',
-        //justifyContent: 'center',
         justifyContent: 'space-between',
         marginTop: 20,
         

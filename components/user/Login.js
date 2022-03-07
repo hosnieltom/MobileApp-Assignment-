@@ -2,43 +2,31 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import { AsyncStorage } from 'react-native';
 
-const storeData = async (value) => {
+const storeToken = async (value) => {
     try{
         const jsonValue = JSON.stringify(value)
         await AsyncStorage.setItem('@spacebook_details', jsonValue)
     }
     catch(e) {
-        console.error(error)
+        console.error( error )
     }
 }
 class LoginScreen extends Component {
 
-    constructor(props) {
-        super(props);
-
+    constructor( props ) {
+        super( props );
         this.state = {
             // I need to leave the email and password value empty after finishing the app test
             // test3@mmu.co.uk hello123
             email: 'test3@mmu.ac.uk',
-            password: 'hello123'
-            //d
+            password: 'hello123',
+            error: '',
+            confirmPassword:'',
+            confirmEmail: ''
         };
     }
-    /*
-    handleEmailInput = (emai => {
-        // I may do some validation leter on
-        this.setState( {email: emai} )
-    })
-
-    handlePasswordInput = (pass => {
-        // I may do some validation leter on
-        this.setState( {password: pass} )
-    })
-    */
     onLogin = () => {
-        
         fetch('http://localhost:3333/api/1.0.0/login', {
             method: 'POST',
             headers: {
@@ -49,52 +37,74 @@ class LoginScreen extends Component {
                 password: this.state.password
             })
           })
-          .then((response) => response.json())
-          .then((json) => {
-              console.log(json);
-              storeData(json);
-              this.props.navigation.navigate("Home")
+          .then(( response ) => {
+              
+            if( !response.ok ){
+                
+                if ( this.state.email  === '') 
+                  throw Error( 'Email is requrired' )
+
+                else if ( this.state.password  === '') 
+                  throw Error( 'Password is requrired' ) 
+
+                else if ( response.status  === 400 ) 
+                  throw Error( 'Invalid email or password ' ) 
+
+                else if ( response.status  === 500 ) 
+                  throw Error( 'Server Error' ) 
+
+                else
+                  throw Error( 'Check your connection' )
+            } 
+            return response.json();
           })
+        
+          .then((json) => {
+                storeToken( json );
+                this.props.navigation.navigate( "Home" )
+          })
+          
           .catch((error) => {
-              console.error(error)
+            this.setState( { error: error.message } )
           });
       }
     render(){
-        const nav = this.props.navigation;
         return(
             <View style={styles.container}>
                 <View>
-                <TextInput
-                    style={styles.inputField}
-                    placeholder="email..."
-                    onChangeText={(email) => this.setState({email})}
-                    value={this.state.email}
-                    />
-
-                <TextInput 
-                    style={styles.inputField}
-                    placeholder="password..."
-                    secureTextEntry={true}
-                    onChangeText={(password) => this.setState({password})}
-                    value={this.state.password}
-                    />
-            </View>
-            <View  style={styles.buttonContainer}>
-            <View style={styles.button}>
-                <Button
-                 title='Login'
-                 // I need to bind an object may be
-                 onPress={() => this.onLogin()}
-                 />
+                   <Text  style={styles.errorText}>{this.state.error}</Text>
                 </View>
-            <View style={styles.button}>
-                <Button title="Sign up for Spacebook" 
-                onPress={() => nav.navigate("SignUp")}/>
-            </View>
+                
+                <View>
+                    <TextInput
+                        style={styles.inputField}
+                        placeholder="email..."
+                        onChangeText={(email) => this.setState({email})}
+                        value={this.state.email}
+                        />
+
+                    <TextInput 
+                        style={styles.inputField}
+                        placeholder="password..."
+                        secureTextEntry={true}
+                        onChangeText={(password) => this.setState({password})}
+                        value={this.state.password}
+                        />
+                </View>
+                   <View  style={styles.buttonContainer}>
+                <View style={styles.button}>
+                    <Button
+                    title='Login'
+                    onPress={ () => this.onLogin() }
+                    />
+                    </View>
+                <View style={ styles.button }>
+                    <Button title="Sign up for Spacebook" 
+                    onPress={ () => this.props.navigation.navigate( "SignUp" ) }/>
+                </View>
             </View>
          </View>
-            /*value={this.state.email} */
-
+    
         );
     }
 }
@@ -109,6 +119,12 @@ const styles = StyleSheet.create({
         color: 'blue',
         fontWeight: 'bold',
         fontSize: 30,
+      },
+      errorText: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontFamily: "Cochin", 
+        fontSize: 18,
       },
     inputField: {
        padding: 14,

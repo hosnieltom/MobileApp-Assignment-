@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class Post extends Component {
+class AddPost extends Component {
 
     constructor( props ) {
         super( props );
@@ -24,7 +24,8 @@ class Post extends Component {
       fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/post`, {
         method: 'POST',
         headers: {
-            'x-authorization': session_data.token
+            'x-authorization': session_data.token,
+            'Content-Type':'application/json'
         },
         body: JSON.stringify({
           text:this.state.text })
@@ -140,4 +141,4 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
       },
   });
-  export default Post
+  export default AddPost

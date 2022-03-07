@@ -2,6 +2,7 @@ import React,{ Component } from "react";
 import { Text, TextInput, View, Button, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableHighlight } from "react-native-gesture-handler";
+import UserProfile from './UserProfile'
 
 class DisplayPost extends Component {
 
@@ -10,15 +11,15 @@ class DisplayPost extends Component {
         this.state = {
             isLoading : true,
             post_information : [],
-            text: ''
+            text: '',
+            profile_id: null
         }
     }
-    getPost = async () => {
+    getData = async (user_id) => {
         let getData = await AsyncStorage.getItem('@spacebook_details')
         let session_data = JSON.parse(getData)
-        let user_id = session_data.id
-  
-  
+        // let user_id = session_data.id
+    
         fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/post`, {
           method: 'GET',
           headers: {
@@ -51,7 +52,7 @@ class DisplayPost extends Component {
           user_id = this.props.route.params.user_id;
         }
         
-        fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/post/${post_id}`, {
+        fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/post/9`, {
           method: 'DELETE',
           headers: {
               'x-authorization': session_data.token
@@ -67,15 +68,110 @@ class DisplayPost extends Component {
             console.error(error)
         });
     }
-    componentDidMount(){
-        this.deletePost
-        this.getPost()
+    likePost = async (post_id) => {
+        let getData = await AsyncStorage.getItem('@spacebook_details')
+        let session_data = JSON.parse(getData)
+        //let user_id = session_data.id
+        // I am trying to get post_id
+        //let id = post_id
+        //console.log(post_id, user_id);
+        
+        fetch(`http://localhost:3333/api/1.0.0/user/${this.state.profile_id}/post/${post_id}/like`, {
+          method: 'POST',
+          headers: {
+              'x-authorization': session_data.token
+          }
+          
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson)
+          
+      })
+  
+          .then( (error) => {
+              console.error(error);
+          })
     }
 
+    removeLikePost = async (post_id) => {
+        let getData = await AsyncStorage.getItem('@spacebook_details')
+        let session_data = JSON.parse(getData)
+        let user_id = session_data.id
+        // I am trying to get post_id
+        let id = post_id
+        
+        fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/post/${id}/like`, {
+          method: 'DELETE',
+          headers: {
+              'x-authorization': session_data.token
+          }
+          
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson)
+          
+      })
+  
+          .then( (error) => {
+              console.error(error);
+          })
+    }
+    componentDidMount(){
+        this.unsubscribe = this.props.navigation.addListener('focus', async () => {
+        let { user_id } = this.props; 
+        console.log("Who am I", user_id);
+        this.setState({"profile_id": user_id});
+    //this.deletePost
+        await this.getPost(user_id)
+        //await this.likePost()
+        });
+      }
     
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+ 
+   
+    
+   
+   
 
-    /*
+    
+    
+     /*
+     componentDidMount(){
+        this.unsubscribe = this.props.navigation.addListener('focus', async () => {
+        let { user_id } = this.props; 
+        console.log("Who am I", user_id);
+        this.setState({"profile_id": user_id});
+    //this.deletePost
+        await this.getPost(user_id)
+        //await this.likePost()
+        });
+      }
+    
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
 
+     componentDidMount(){
+        this.unsubscribe = this.props.navigation.addListener('focus', async () => {
+        let { user_id } = this.props; 
+        console.log("Who am I", user_id);
+        this.setState({"profile_id": user_id});
+    //this.deletePost
+        await this.getPost(user_id)
+        await this.likePost()
+        });
+      }
+    
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+
+     
     componentDidMount(){
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
           this.deletePost
@@ -86,7 +182,6 @@ class DisplayPost extends Component {
       componentWillUnmount() {
         this.unsubscribe();
       }
-
     <Button
     fontSize={10}
     title="Confirm"
@@ -96,8 +191,9 @@ class DisplayPost extends Component {
     render() {
         const nav = this.props.navigation;
         const getUpdatePost = (user_id) => {
-            nav.navigate("UpdatePost", {"user_id": user_id})
-            console.log(user_id)}
+        nav.navigate("UpdatePost", {"user_id": user_id})
+        console.log(user_id)}
+      
         return(
             <View>
                 <View style={styles.textContainer}>
@@ -112,11 +208,19 @@ class DisplayPost extends Component {
                             <Text style={styles.text}>{item.text}</Text>
                             <Text style={styles.text}>{item.timestamp}</Text>
                             <View style={styles.buttonContainer}>
-                                <View style={styles.removeButton}> 
-                                 <TouchableHighlight onPress={()=>this.deletePost()} style={styles.removeButton}>
-                                   <Text style={styles.buttonText}>Like</Text>
-                                  </TouchableHighlight>
+                                <View>
+                                    <View style={styles.removeButton}> 
+                                        <TouchableHighlight onPress={()=>this.likePost(item.post_id)} style={styles.removeButton}>
+                                        <Text style={styles.buttonText}>Like {item.numLikes}</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                    <View style={styles.removeButton}> 
+                                        <TouchableHighlight onPress={()=>this.removeLikePost(item.post_id)} style={styles.removeButton}>
+                                        <Text style={styles.buttonText}>DisLike</Text>
+                                        </TouchableHighlight>
+                                    </View>
                                 </View>
+                               
                                 <View style={styles.removeButton}> 
                                 <TouchableHighlight onPress={()=>getUpdatePost(item.author.user_id)} style={styles.removeButton}>
                                    <Text style={styles.buttonText}>Update</Text>
