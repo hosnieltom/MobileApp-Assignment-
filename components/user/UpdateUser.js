@@ -103,6 +103,7 @@ class UpdateUser extends Component {
 
                 else if( this.state.password === '' )
                   throw Error( 'Password is required' )
+                  
                 else if ( response.status  === 400 ) 
                   throw Error( 'Bad Request' ) 
 
@@ -139,8 +140,10 @@ class UpdateUser extends Component {
                <View>
                   <Text style={ styles.errorText }>{ this.state.error }</Text>
                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.titelText}>Update a User</Text>
+                <View style={styles.titleContainer}>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.titelText}>Update a User</Text>
+                    </View>
 
                     <TextInput
                         style={ styles.textInput }
@@ -168,7 +171,9 @@ class UpdateUser extends Component {
                         value={this.state.password}/>
                 </View>
                     <View style={styles.buttonContainer} >
-                        <Button style={styles.button} title="Update user" 
+                        <Button  
+                        title="Update user"
+                        color = "#DCDCDC"
                         onPress={()=> this.updateUser()}/>
                     </View> 
              </View>
@@ -180,11 +185,16 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
       },
       textContainer: {
         justifyContent:'center',
         justifyContent: 'space-between'
+      },
+      titleContainer: {
+        justifyContent:'center',
+        alignItems:'center',
       },
       text: {
         fontSize: 18,
@@ -192,16 +202,20 @@ const styles = StyleSheet.create({
         marginTop: 12,
       },
       textInput: {
+        borderWidth:1,
+        borderRadius:10,
+        backgroundColor: '#eee',
+        padding: 8,
+        margin: 8,
         fontSize: 18,
-        fontFamily: "Cochin",
-        marginTop: 20,
+        width: 200
       },
       titelText: {
-        color: 'blue',
+        color: 'black',
         fontWeight: 'bold',
-        fontSize: 24,
+        fontSize: 18,
         fontFamily: "Cochin",
-        marginTop: 12,
+        marginBottom: 20,
       },
       errorText: {
         color: 'red',
@@ -209,22 +223,12 @@ const styles = StyleSheet.create({
         fontFamily: "Cochin", 
         fontSize: 18,
       },
-    inputField: {
-       padding: 14,
-      fontSize: 22,
-      width: '90%',
-      marginTop: 10
-    },
     buttonContainer:{
         justifyContent: 'space-between',
         marginTop: 20,
-    },
-    button:{
-        backgroundColor: "#009688",
-        elevation: 8,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12 
+        borderRadius:5,
+      borderWidth: 1,
+      borderColor: '#fff',
     },
   });
 

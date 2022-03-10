@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
+import { Text, TextInput, View, Button, StyleSheet, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const storeToken = async (value) => {
@@ -75,35 +75,39 @@ class LoginScreen extends Component {
                    <Text  style={styles.errorText}>{this.state.error}</Text>
                 </View>
                 
-                <View>
+                <View style = { styles.inputContainer }>
+                    <Text style = { styles.text }>Enter email</Text>
                     <TextInput
                         style={styles.inputField}
-                        placeholder="email..."
+                        placeholder="e.g. hosni@gmail.com"
                         onChangeText={(email) => this.setState({email})}
                         value={this.state.email}
                         />
-
+                    <Text style = { styles.text }>Enter password</Text>
                     <TextInput 
                         style={styles.inputField}
-                        placeholder="password..."
+                        placeholder="e.g. password"
                         secureTextEntry={true}
                         onChangeText={(password) => this.setState({password})}
                         value={this.state.password}
                         />
-                </View>
-                   <View  style={styles.buttonContainer}>
-                <View style={styles.button}>
-                    <Button
-                    title='Login'
-                    onPress={ () => this.onLogin() }
-                    />
                     </View>
-                <View style={ styles.button }>
-                    <Button title="Sign up for Spacebook" 
-                    onPress={ () => this.props.navigation.navigate( "SignUp" ) }/>
+                    <View  style={styles.buttonContainer}>
+                        <View style={styles.button}>
+                            <Button
+                            color = "#DCDCDC"
+                            title = 'Login'
+                            onPress = { () => this.onLogin() }
+                            />
+                        </View>
+                        <View style={ styles.button }>
+                            <Button 
+                            color = "#DCDCDC"
+                            title = "Sign up" 
+                            onPress = { () => this.props.navigation.navigate( "SignUp" ) }/>
+                        </View>
                 </View>
             </View>
-         </View>
     
         );
     }
@@ -113,12 +117,19 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems:'center',
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
+      },
+      inputContainer: {
+        alignItems:'center',
         justifyContent:'center'
       },
+      signContainer: {
+        flexDirection: 'row',
+      },
       text: {
-        color: 'blue',
-        fontWeight: 'bold',
-        fontSize: 30,
+        color: 'black',
+        fontSize: 18,
       },
       errorText: {
         color: 'red',
@@ -127,20 +138,28 @@ const styles = StyleSheet.create({
         fontSize: 18,
       },
     inputField: {
-       padding: 14,
-      fontSize: 22,
-      width: '90%'
+        borderWidth:1,
+        borderRadius:10,
+        backgroundColor: '#eee',
+        padding: 8,
+        margin: 8,
+        fontSize: 18,
+        width: 200
     },
     buttonContainer:{
         justifyContent: 'center',
+        flexDirection: 'row',
+        width: 200,
         
     },
     button:{
-        elevation: 8,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-        
+        marginRight:20,
+        marginLeft:20,
+        marginTop:10,
+        width: 80,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
     },
   });
 export default LoginScreen

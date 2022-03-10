@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, ActivityIndicator, StyleSheet,FlatList } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet, FlatList, StatusBar, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -98,22 +98,24 @@ class Friends extends Component {
         nav.navigate( "Profile", {"user_id": user_id } )}
 
         return(
-          <View>
+          <View style={ styles.container }>
               <View>
                   <Text style={ styles.titelText }>Friends</Text>
               </View>
-              <View style = { styles.listContainer }>
-                  <FlatList
-                      data = { this.state.friends_info }
-                      renderItem = { ( { item } ) => (
-                      <View>
-                          <TouchableOpacity onPress = { () => getProfile( item.user_id ) }>
-                            <Text style = { styles.text }>{ item.user_givenname } { item.user_familyname }</Text>
-                          </TouchableOpacity>
-                      </View>
-                      )}
-                    keyExtractor = { ( item, index ) => item.user_id.toString() }/>
-              </View>
+                <ScrollView style = { styles.scrollcontainer }>
+                  <View style = { styles.listContainer }>
+                    <FlatList
+                        data = { this.state.friends_info }
+                        renderItem = { ( { item } ) => (
+                        <View>
+                            <TouchableOpacity onPress = { () => getProfile( item.user_id ) }>
+                              <Text style = { styles.text }>{ item.user_givenname } { item.user_familyname }</Text>
+                            </TouchableOpacity>
+                        </View>
+                        )}
+                      keyExtractor = { ( item, index ) => item.user_id.toString() }/>
+                  </View>
+                </ScrollView>
           </View>
         )
       }
@@ -123,10 +125,15 @@ class Friends extends Component {
 const styles = StyleSheet.create( {
     container: {
         flex:1,
+        backgroundColor: '#87CEFA'
       },
       listContainer: {
         justifyContent: 'space-between',
         paddingTop: 5,
+      },
+      scrollcontainer: {
+        flex:1,
+        paddingTop: StatusBar.currentHeight,
       },
       errorText: {
         color: 'red',
@@ -141,9 +148,9 @@ const styles = StyleSheet.create( {
         marginBottom: 10
       },
       titelText: {
-        color: 'blue',
+        color: 'black',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: "Cochin",
         marginTop: 12,
       }

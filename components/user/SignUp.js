@@ -98,15 +98,18 @@ class SignUp extends Component {
                       onChangeText={ ( password ) => this.setState( { password } )}
                       value={ this.state.password }
                       />
-                  <View>
-                    <View>
+                  <View style={ styles.buttonContainer }>
+                    <View style={ styles.button }>
                         <Button
+                        color = "#DCDCDC"
                         title="Sign up"
                         onPress={ () => this.addUser() }/>
                     </View>
-                    <View><Text>Or</Text></View>
-                    <View>
-                        <Button title="Login" 
+                    <View style={ styles.textButton }><Text>Or</Text></View>
+                    <View style={ styles.button }>
+                        <Button 
+                        color = "#DCDCDC"
+                        title="Login" 
                         onPress={ () => this.props.navigation.navigate( "Login" ) }/>
                     </View>
                   </View>
@@ -118,7 +121,8 @@ class SignUp extends Component {
     container: {
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
       },
       formContainer: {
         alignItems:'center',
@@ -129,6 +133,12 @@ class SignUp extends Component {
         fontWeight: 'bold',
         fontSize: 24,
         fontFamily: "Cochin",
+      },
+      textButton: {
+        marginRight:5,
+        marginLeft:5,
+        marginTop:20,
+        
       },
       errorText: {
         color: 'red',
@@ -143,20 +153,27 @@ class SignUp extends Component {
         fontSize: 18,
       },
     inputField: {
-       padding: 14,
-      fontSize: 22,
-      width: '90%'
+      borderWidth:1,
+      borderRadius:10,
+      backgroundColor: '#eee',
+      padding: 8,
+      margin: 8,
+      fontSize: 18,
+      width: 200
     },
     buttonContainer:{
-        justifyContent: 'center',
-        
+      justifyContent: 'center',
+      flexDirection: 'row',
+      width: 200,  
     },
     button:{
-        backgroundColor: "#009688",
-        elevation: 8,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
+      marginRight:8,
+      marginLeft:8,
+      marginTop:10,
+      width: 80,
+      borderRadius:5,
+      borderWidth: 1,
+      borderColor: '#fff',
         
     },
   });

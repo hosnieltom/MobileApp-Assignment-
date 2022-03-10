@@ -56,7 +56,6 @@ class AppCamera extends Component {
             else 
                 throw Error( 'Check your connection' )
           }
-            //console.log("Picture added", response);
         })
         .catch(( error ) => {
             this.setState( { error: error.message } )

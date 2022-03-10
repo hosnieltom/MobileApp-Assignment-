@@ -1,159 +1,199 @@
 import React, { Component } from "react";
-import { Text, Button, TextInput, View, StyleSheet } from "react-native";
+import { Text, Button, TextInput, View, StyleSheet} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class UpdatePost extends Component {
 
     constructor( props ) {
         super( props )
+        
         this.state = {
-            isLoading : true,
             post_information : [],
             text: '',
             profile_id: null,
-            postID: null
+            postID: null,
+            error:''
             
         }
     }
     
 
-    updatePost = async (user_id, post_id) => {
-        let data = await AsyncStorage.getItem('@spacebook_details')
-        let session_data = JSON.parse(data)
+    updatePost = async () => {
+        let data = await AsyncStorage.getItem( '@spacebook_details' )
+        let session_data = JSON.parse( data )
         
         let orig_text = this.state.post_information.text;
         let to_send={}
         
-        if( this.state.text != orig_text) {
+        if( this.state.text != orig_text ) {
             to_send['text'] = this.state.text; 
             }
 
-        console.log(JSON.stringify(to_send))
-
-        fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/post/${post_id}`, {
+        fetch(`http://localhost:3333/api/1.0.0/user/${this.state.profile_id}/post/${this.state.postID}`, {
             method: 'PATCH',
             headers: {
                 'content-type': 'application/json',
                 'x-authorization': session_data.token
             },
-            body : JSON.stringify(to_send)
+            body : JSON.stringify( to_send )
         })
         .then( (response) => {
-            console.log(response);
-            console.log('User updated');
+            if( !response.ok ) {
+                  
+                if ( response.status  === 400 ) 
+                  throw Error( 'Bad Request' ) 
+
+                else if ( response.status  === 401 ) 
+                  throw Error( 'You are Unauthorized' )
+
+                else if( response.status === 403 )
+                  throw Error( 'You are forbidden to make change' )
+
+                else if( response.status === 404 )
+                   throw Error( 'Page not found' )
+
+                else if ( response.status  === 500 ) 
+                  throw Error( 'Server Error' ) 
+
+                else 
+                  throw Error( 'Check your connection' )
+            }   
         })
 
-        .then( (error) => {
-            console.error(error);
+        .then( () => {
+
+            this.setState( {
+                isLoading : false,
+            })
+            this.props.navigation.navigate( 'Profile' )
+          })
+
+        .catch( ( error ) => {
+            this.setState( { error: error.message } )
         })
       
     }
-    componentDidMount(){
-        this.unsubscribe = this.props.navigation.addListener('focus', async () => {
+    componentDidMount() {
+
+        this.unsubscribe = this.props.navigation.addListener( 'focus', async () => {
         let { user_id,post_id } = this.props.route.params; 
-        console.log("Who am I", user_id, post_id);
-        this.setState({"profile_id": user_id, "postID": post_id});
-    //this.deletePost
-        await this.updatePost(user_id,post_id)
-        //await this.likePost()
+        this.setState( { "profile_id": user_id, "postID": post_id } );
         });
-      }
-    
-      componentWillUnmount() {
-        this.unsubscribe();
-      }
-    /*
-    let user_id = null;
-        if(typeof this.props.route.params === 'undefined'){
-          user_id = session_data.id
-        }else{
-          console.log(this.props.route.params)
-          user_id = this.props.route.params.user_id;
-        }
-    post_id: '',
-            text: '',
-            timestamp: '',
-            user_id: '',
-            firsr_name: '',
-            last_name: '',
-            email: '',
-            numLike: '',
-            author: ''
-    let orig_post_id = this.state.post_information.post_id
-    let orig_timestamp = this.state.post_information.timestamp
-        let orig_user_id = this.state.post_information.author.user_id
-        let orig_first_name = this.state.post_information.author.firsr_name
-        let orig_last_name = this.state.post_information.author.author.last_name
-        let orig_email = this.state.post_information.email;
-        let orig_numLike = this.state.post_information.numLike;
-     */
+    }
+
+    componentWillUnmount() {
+    this.unsubscribe();
+    }
     
     render() {
-        
-        return(
-            <View style={styles.container}> 
-                <View style={styles.textContainer}>
-                    <Text style={styles.titelText}>Update post</Text>
 
+
+        return (
+            
+            <View style={styles.container}> 
+                <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
+                <Text style={styles.titelText}>Update post</Text>
+                <View style={ styles.inputContainer }>
                     <TextInput
-                        placeholder="Enter new first name..."
-                        onChangeText={(text) => this.setState({text})}
-                        value={this.state.text}/>
-                    
+                        multiline
+                        style={ styles.inputField } 
+                        placeholder="Type here..."
+                        onChangeText={ ( text ) => this.setState( { text } ) }
+                        value={ this.state.text }/>
                 </View>
-                    <View style={styles.buttonContainer} >
-                        <Button style={styles.button} title="Update post" 
+                <View style={styles.buttonContainer}>
+                    <View style={styles.updateButtonContainer}>
+                        <Button 
+                        title="Update post" 
+                        color = "#DCDCDC" 
                         onPress={()=> this.updatePost()}/>
                     </View>
-                    
-             </View>
-        )
-    }
+                    <View style={styles.backButtonContainer}>
+                        <Button 
+                        title="Back" 
+                        color = "#DCDCDC"
+                        onPress={()=> this.props.navigation.navigate("Profile")}/>
+                    </View>
+                </View>   
+            </View>
+         )
+     }
 }
 const styles = StyleSheet.create({
+    
     container: {
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
-      },
-      textContainer: {
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
+    },
+    inputContainer: {
         flex:0.4,
-        //alignItems:'center',
-        //justifyContent:'center'
-        justifyContent: 'space-between'
-      },
-      text: {
+        borderLeftWidth: 2,
+        borderRightWidth: 2,
+        borderTopWidth: 2,
+        borderBottomWidth: 2,
+        height: 50,
+        justifyContent: 'space-between',
+    },
+    text: {
         fontSize: 18,
         fontFamily: "Cochin",
         marginTop: 12,
-      },
-      titelText: {
-        color: 'blue',
+    },
+    titelText: {
+        color: 'black',
         fontWeight: 'bold',
-        fontSize: 24,
+        fontSize: 18,
         fontFamily: "Cochin",
         marginTop: 12,
-      },
-    inputField: {
-       padding: 14,
-      fontSize: 22,
-      width: '90%'
+        paddingBottom: 10
     },
-    buttonContainer:{
-        flex:0.7,
-        //flexDirection: 'row-reverse',
-        //justifyContent: 'center',
-        justifyContent: 'space-between',
-        marginTop: 20,
-        
+    errorText: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontFamily: "Cochin", 
+        fontSize: 18,
+        marginBottom: 20
+    },
+    inputField: {
+        fontSize: 16,
+        height: '100%',
+        backgroundColor: '#ffffff',
+        paddingLeft: 15,
+        paddingRight: 15,
     },
     button:{
-        backgroundColor: "#009688",
         elevation: 8,
         borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-        
+        margin: 10,
+        width: 80,
+        height: 30, 
     },
-  });
+    buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    backButtonContainer:{
+        elevation: 8,
+        borderRadius: 10,
+        margin: 10,
+        width: 80,
+        height: 35,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
+    },
+    updateButtonContainer:{
+        elevation: 8,
+        borderRadius: 10,
+        margin: 10,
+        width: 120,
+        height: 35,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
+    },
+});
 export default UpdatePost

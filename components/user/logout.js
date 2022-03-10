@@ -44,8 +44,10 @@ class Logout extends Component {
                 <View><Text style = { styles.errorText }>{ this.state.error }</Text></View>
                 <View><Text style = { styles.text }>Log out of spacebook</Text></View>
                 <View style = { styles.buttonContainer }>
-                    <Button title="Log Out"
-                    onPress={ () => this.onLogout() }/>
+                    <Button 
+                    title = "Log Out"
+                    color = "#DCDCDC"
+                    onPress = { () => this.onLogout() }/>
                 </View>
             </View>
         )
@@ -56,13 +58,14 @@ const styles = StyleSheet.create( {
     container: {
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
       },
       text: {
-        color: 'blue',
+        color: 'black',
         fontWeight: 'bold',
         fontFamily: "Cochin", 
-        fontSize: 20,
+        fontSize: 18,
         padding: 10,
         margin: 10,
       },
@@ -74,17 +77,13 @@ const styles = StyleSheet.create( {
       },
     buttonContainer:{
         justifyContent: 'center',
-        padding: 10,
-        margin: 10,
+        height: 35,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
         
     },
-    button:{
-        elevation: 8,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-        
-    },
+
   });
 
 export default Logout

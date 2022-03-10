@@ -82,8 +82,8 @@ class UserInfo extends Component {
                     <Text>Loading...</Text>
                     <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
                     <ActivityIndicator
-                        size="large"
-                        color="#00ff00"/>
+                        size = "large"
+                        color = "#00ff00"/>
                 </View>
             )
         }
@@ -92,9 +92,11 @@ class UserInfo extends Component {
             const nav = this.props.navigation;
             return (
                 <View style={styles.container}>
-                    <View style={styles.buttonContainer}>
-                        <Button style={styles.button} title="Take photo" 
-                            onPress={()=> nav.navigate("CameraImp")}/>
+                    <View style={styles.buttonDetails}>
+                        <Button
+                         title="Take photo"
+                         color = "#DCDCDC" 
+                        onPress={()=> nav.navigate("CameraImp")}/>
                     </View>
                     <Text style={styles.titelText}>User details</Text>
                     <View>
@@ -105,8 +107,18 @@ class UserInfo extends Component {
                         <Text style={styles.text}>friend_count: {this.state.user_information.friend_count}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button style={styles.button} title="Edit details" 
+                        <View style={styles.buttonDetails}>
+                            <Button 
+                            title="Edit details" 
+                            color = "#DCDCDC"
                             onPress={()=> nav.navigate("UpdateUser")}/>
+                        </View>
+                        <View style={styles.button}>
+                            <Button 
+                            title="Back" 
+                            color = "#DCDCDC"
+                            onPress={()=> this.props.navigation.navigate("Profile")}/>
+                        </View>
                     </View>
                 </View> 
             ) } 
@@ -117,7 +129,8 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
       },
       text: {
         fontSize: 18,
@@ -125,7 +138,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
       },
       titelText: {
-        color: 'blue',
+        color: 'black',
         fontWeight: 'bold',
         fontSize: 24,
         fontFamily: "Cochin",
@@ -139,22 +152,36 @@ const styles = StyleSheet.create({
       },
     inputField: {
        padding: 14,
-      fontSize: 22,
-      width: '90%'
-    },
-    buttonContainer:{
-        flex:0.7,
-        justifyContent: 'space-between',
-        marginTop: 20,
-        
+       fontSize: 22,
+       width: '90%'
     },
     button:{
-        backgroundColor: "#009688",
+        marginRight:20,
+        marginLeft:20,
+        marginTop:10,
+        width: 80,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
+        height:35
+      },
+      buttonDetails:{
         elevation: 8,
         borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-        
+        margin: 10,
+        width: 120,
+        height: 35,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
+      },
+      buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    singleButtonContainer:{
+        padding: 10,
     },
   });
 

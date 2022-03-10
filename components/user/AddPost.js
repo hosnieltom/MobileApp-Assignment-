@@ -8,11 +8,10 @@ class AddPost extends Component {
         super( props );
 
         this.state = {
-          text: ''
+          text: '',
+          isLoading: '',
+          error: ''
         };
-    }
-    componentDidMount(){
-      //this.addPost()
     }
 
     postPost = async () => {
@@ -27,118 +26,145 @@ class AddPost extends Component {
             'x-authorization': session_data.token,
             'Content-Type':'application/json'
         },
-        body: JSON.stringify({
-          text:this.state.text })
+        body: JSON.stringify( {
+          text: this.state.text } ) 
+          })
 
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log('test',responseJson)
-        this.setState({
-            isLoading : false,
-            post_information: responseJson
-        })
-      })
-      .catch((error) => {
-          console.error(error)
-      });
-  }
-    render() {
-        return(
+          .then((response) => { 
+
+            if( !response.ok ) {
+              if ( this.state.text === '' )
+                throw Error( 'You can not send empty post' )
+                    
+              else if ( response.status  === 401 ) 
+                throw Error( 'You are Unauthorized' )
+                  
+              else if ( response.status  === 404 ) 
+                throw Error( 'Page not found' ) 
+
+              else if ( response.status  === 500 ) 
+                throw Error( 'Server Error' ) 
+
+              else
+                throw Error( 'Check server connection' )
+             }
+          } )
+
+          .then( () => {
+
+            this.setState( {
+                isLoading : false,
+            })
+            this.props.navigation.navigate( 'Profile' )
+          })
+          .catch((error) => {
+              this.setState( { error: error.message } )
+          });
+      }
+      render() {
+        
+        if( this.state.isLoading ) {
+
+          return(
             <View>
-                <Text>Add Post</Text>
-                <TextInput
-                    style={styles.inputField}
-                    placeholder="Type here..."
-                    onChangeText={(text) => this.setState({text})}
-                    value={this.state.text}/>
-                
-                <View style={styles.button}> 
-                    <Button
-                    title="Post"
-                    onPress={()=>this.postPost()}/>
-                </View>
+              <Text>Loading...</Text>
+              <ActivityIndicator
+                size = "large"
+                color = "#00ff00"/>
             </View>
-             )
+          )
+        }
+        else {
+          return (
+            <View style = { styles.container }>
+              <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
+              <Text style = { styles.titelText }>Add Post</Text>
+              <View style = { styles.inputContainer }>
+                <TextInput
+                  multiline
+                  style={ styles.inputField } 
+                  placeholder = "Type here..."
+                  onChangeText = { ( text ) => this.setState( { text } ) }
+                  value = { this.state.text }/>
+              </View>
+              
+              <View style = {styles.buttonContainer}>
+                <View style = { styles.singleButtonContainer }> 
+                  <Button 
+                   title = "Post"
+                   color = "#DCDCDC"
+                   onPress = { () =>this.postPost() }/>
+                </View>
+                <View style = {styles.singleButtonContainer}>
+                  <Button  
+                  title = "Back" 
+                  color = "#DCDCDC"
+                  onPress = {()=> this.props.navigation.navigate("Profile")}/>
+              </View> 
+              </View>
+            </View>
+            )
+          }
+        }
     }
-}
 
 const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor: '#87CEFA'
       },
-      headerContainer: {
-        //flex:0.2,
-        flexdirection: 'row-reverse',
-         //justify-content: flex-end         
-        //alignItems:'center',
-        justifyContent:'flex-end',
-        //justifyContent: 'space-between',
-        marginTop: 30,
-        padding: 2,
-      },
-      textContainer: {
-        flex:0.5,
-        //alignItems:'center',
-        //justifyContent:'center'
-        justifyContent: 'space-between'
-      },
-      listContainer: {
-        flex:0.7,
-        //alignItems:'center',
-        //justifyContent:'center'
+      inputContainer: {
+        flex:0.4,
+        borderLeftWidth: 2,
+        borderRightWidth: 2,
+        borderTopWidth: 2,
+        borderBottomWidth: 2,
+        height: 50,
         justifyContent: 'space-between',
-        padding: 14,
       },
       text: {
         fontSize: 18,
         fontFamily: "Cochin",
         marginTop: 12,
       },
-      input: {
-        fontSize: 20,
-        marginLeft: 10,
-        width: "90%",
-      },
       titelText: {
-        color: 'blue',
-        fontWeight: 'bold',
-        fontSize: 24,
-        fontFamily: "Cochin",
-        marginTop: 12,
+      color: 'black',
+      fontWeight: 'bold',
+      fontSize: 18,
+      fontFamily: "Cochin",
+      marginTop: 12,
+      paddingBottom: 10
+      },
+      errorText: {
+      color: 'red',
+      fontWeight: 'bold',
+      fontFamily: "Cochin", 
+      fontSize: 18,
+      marginBottom: 20
       },
     inputField: {
-       padding: 14,
-      fontSize: 22,
-      width: '90%'
+      fontSize: 16,
+      height: '100%',
+      backgroundColor: '#ffffff',
+      paddingLeft: 15,
+      paddingRight: 15
     },
     buttonContainer:{
-        flex:0.7,
-        //flexDirection: 'row-reverse',
-        //justifyContent: 'center',
-        justifyContent: 'space-between',
-        marginTop: 20,
-        
-    },
-    button:{
-        //backgroundColor: "#009688",
-        elevation: 8,
-        borderRadius: 10,
-        //paddingVertical: 10,
-        //paddingHorizontal: 12,
-        margin: 10,
-        width: 80,
-        height: 30,
-        
-    },
-    searchBar: {
-        fontSize: 24,
-        margin: 10,
-        width: 120,
-        height: 30,
-        backgroundColor: 'white',
-      },
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: 10,
+  },
+  singleButtonContainer:{
+    elevation: 8,
+    borderRadius: 10,
+    margin: 10,
+    width: 80,
+    height: 35,
+    borderRadius:5,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
   });
   export default AddPost

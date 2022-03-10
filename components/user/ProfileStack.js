@@ -10,6 +10,7 @@ import UpdatePost from "./UpdatePost";
 import DisplayPost from "./DisplayPost";
 import SinglePost from "./SinglePost";
 import Search from './Search'
+import AddFriend from './AddFriend'
 //import CameraImp from './CameraImp'
 //  <Stack.Screen name="CameraImp" component={CameraImp}/>
 
@@ -24,13 +25,14 @@ class ProfileStack extends Component {
              <Stack.Screen name="FriendRequests" component={FriendRequests} />
              <Stack.Screen name="Friends" component={Friends}/>
              <Stack.Screen name="Post" component={AddPost}
-             options={{ headerShown: false}} />
-             <Stack.Screen name="DisplayPost" component={DisplayPost}/>
+             options={{ headerShown: false}}/>
              <Stack.Screen name="UpdatePost" component={UpdatePost}
              options={{ headerShown: false}} />
              <Stack.Screen name="Search" component={Search}
              options={{ headerShown: false}}/>
-             <Stack.Screen name="SinglePost" component={SinglePost}/>
+             <Stack.Screen name="SinglePost" component={SinglePost}
+             options={{ headerShown: false}}/>
+             <Stack.Screen name ="AddFriend" component={AddFriend}/>
         </Stack.Navigator>
       
     );
