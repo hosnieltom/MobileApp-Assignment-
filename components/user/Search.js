@@ -86,7 +86,7 @@ class SearchForFriend extends Component {
 
           <View style = { styles.container }>
             <View style = { styles.searchContainer }>
-              <View>
+              <View style = { styles.searchBar }>
                 <TextInput
                   placeholder="Search"
                   style = { styles.search }
@@ -181,18 +181,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
     marginTop:15     
-},
+  },
   search:{
     elevation: 8,
     borderRadius: 10,
     margin: 10,
     width: 180,
-    height: 40, 
+    height: 37, 
     padding: 10,
     backgroundColor:'#fff', 
     fontSize: 18,
     fontFamily: "Cochin",   
-},
+  },
+  searchBar:{
+    paddingTop: 5  
+  },
 });
 
 export default SearchForFriend
