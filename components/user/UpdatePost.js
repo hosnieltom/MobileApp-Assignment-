@@ -13,17 +13,15 @@ class UpdatePost extends Component {
             profile_id: null,
             postID: null,
             error:''
-            
         }
     }
     
-
     updatePost = async () => {
         let data = await AsyncStorage.getItem( '@spacebook_details' )
         let session_data = JSON.parse( data )
         
         let orig_text = this.state.post_information.text;
-        let to_send={}
+        let to_send = {}
         
         if( this.state.text != orig_text ) {
             to_send['text'] = this.state.text; 
@@ -90,29 +88,29 @@ class UpdatePost extends Component {
 
         return (
             
-            <View style={styles.container}> 
-                <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
-                <Text style={styles.titelText}>Update post</Text>
-                <View style={ styles.inputContainer }>
+            <View style = { styles.container }> 
+                <View><Text style = { styles.errorText }>{ this.state.error }</Text></View>
+                <Text style = { styles.titelText }>Update post</Text>
+                <View style = { styles.inputContainer }>
                     <TextInput
                         multiline
-                        style={ styles.inputField } 
-                        placeholder="Type here..."
-                        onChangeText={ ( text ) => this.setState( { text } ) }
-                        value={ this.state.text }/>
+                        style = { styles.inputField } 
+                        placeholder = "Type here..."
+                        onChangeText = { ( text ) => this.setState( { text } ) }
+                        value = { this.state.text }/>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <View style={styles.updateButtonContainer}>
+                <View style = { styles.buttonContainer }>
+                    <View style = { styles.updateButtonContainer }>
                         <Button 
-                        title="Update post" 
+                        title = "Update post" 
                         color = "#DCDCDC" 
-                        onPress={()=> this.updatePost()}/>
+                        onPress = { () => this.updatePost() }/>
                     </View>
-                    <View style={styles.backButtonContainer}>
+                    <View style = { styles.backButtonContainer }>
                         <Button 
-                        title="Back" 
+                        title = "Back" 
                         color = "#DCDCDC"
-                        onPress={()=> this.props.navigation.navigate("Profile")}/>
+                        onPress = { () => this.props.navigation.navigate( "Profile" ) }/>
                     </View>
                 </View>   
             </View>

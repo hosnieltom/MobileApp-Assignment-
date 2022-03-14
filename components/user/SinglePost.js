@@ -82,8 +82,8 @@ class SinglePost extends Component {
                     <Text>Loading...</Text>
                     <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
                     <ActivityIndicator
-                        size="large"
-                        color="#00ff00"/>
+                        size = "large"
+                        color = "#00ff00"/>
                 </View>
             )
         }
@@ -110,9 +110,9 @@ class SinglePost extends Component {
                         <Button 
                         color = "#DCDCDC"
                         title = "Back" 
-                        onPress = {() => this.props.navigation.navigate("Profile",
-                            {"user_id": this.state.post_information.author.user_id,
-                            "post_id": this.state.post_information.post_id})}/>
+                        onPress = {() => this.props.navigation.navigate( "Profile",
+                            { "user_id": this.state.post_information.author.user_id,
+                            "post_id": this.state.post_information.post_id } ) }/>
                     </View>      
                   </View>
                 </View> 

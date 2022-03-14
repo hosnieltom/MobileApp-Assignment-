@@ -68,49 +68,49 @@ class SignUp extends Component {
     
     render(){
         return(
-            <View style={ styles.container }>
+            <View style = { styles.container }>
                <View>
-                  <Text style={ styles.errorText }>{ this.state.error }</Text>
+                  <Text style = { styles.errorText }>{ this.state.error }</Text>
                </View>
                <View>
-                  <Text style={ styles.regText }>{ this.state.register }</Text>
+                  <Text style = { styles.regText }>{ this.state.register }</Text>
                </View>
-               <View style={ styles.formContainer }>
-                  <Text style={ styles.text }>Sign up</Text>
-                  <TextInput style={ styles.inputField }
-                      placeholder="Enter first name..."
-                      onChangeText={ ( first_name ) => this.setState( { first_name} )}
-                      value={ this.state.first_name }/>
-                  <TextInput style={ styles.inputField }
-                      placeholder="Enter last name..."
-                      onChangeText={ ( last_name ) => this.setState( { last_name } )}
-                      value={ this.state.last_name }
+               <View style = { styles.formContainer }>
+                  <Text style = { styles.text }>Sign up</Text>
+                  <TextInput style = { styles.inputField }
+                      placeholder = "Enter first name..."
+                      onChangeText = { ( first_name ) => this.setState( { first_name} )}
+                      value = { this.state.first_name }/>
+                  <TextInput style = { styles.inputField }
+                      placeholder = "Enter last name..."
+                      onChangeText = { ( last_name ) => this.setState( { last_name } )}
+                      value = { this.state.last_name }
                       />
 
-                  <TextInput style={ styles.inputField }
-                      placeholder="email..."
-                      onChangeText={ (email) => this.setState( { email } )}
-                      value={ this.state.email }
+                  <TextInput style = { styles.inputField }
+                      placeholder = "email..."
+                      onChangeText = { (email) => this.setState( { email } )}
+                      value = { this.state.email }
                       />
-                  <TextInput style={ styles.inputField }
-                      placeholder="password..."
-                      secureTextEntry={ true }
-                      onChangeText={ ( password ) => this.setState( { password } )}
-                      value={ this.state.password }
+                  <TextInput style = { styles.inputField }
+                      placeholder = "password..."
+                      secureTextEntry = { true }
+                      onChangeText = { ( password ) => this.setState( { password } )}
+                      value = { this.state.password }
                       />
-                  <View style={ styles.buttonContainer }>
-                    <View style={ styles.button }>
+                  <View style = { styles.buttonContainer }>
+                    <View style = { styles.button }>
                         <Button
                         color = "#DCDCDC"
-                        title="Sign up"
-                        onPress={ () => this.addUser() }/>
+                        title = "Sign up"
+                        onPress = { () => this.addUser() }/>
                     </View>
-                    <View style={ styles.textButton }><Text>Or</Text></View>
-                    <View style={ styles.button }>
+                    <View style = { styles.textButton }><Text>Or</Text></View>
+                    <View style = { styles.button }>
                         <Button 
                         color = "#DCDCDC"
-                        title="Login" 
-                        onPress={ () => this.props.navigation.navigate( "Login" ) }/>
+                        title = "Login" 
+                        onPress = { () => this.props.navigation.navigate( "Login" ) }/>
                     </View>
                   </View>
               </View>
@@ -177,4 +177,5 @@ class SignUp extends Component {
         
     },
   });
+  
 export default SignUp

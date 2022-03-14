@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, } from 'react-native';
+import { Text, View, Button, StyleSheet, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Logout extends Component {
@@ -13,7 +13,7 @@ class Logout extends Component {
         }
     }
 
-    onLogout = async ()=> {
+    onLogout = async () => {
     
         let data = await AsyncStorage.getItem( '@spacebook_details' )
         let session_data = JSON.parse( data );
@@ -27,8 +27,14 @@ class Logout extends Component {
         }) 
 
         .then( ( response ) => {
+
             if( !response.ok ){
-                throw Error( 'Something went wrong, check your authorisation' )
+
+                if ( response.status  === 401 ) 
+                  throw Error( 'You are Unauthorized' ) 
+
+                else if ( response.status  === 500 ) 
+                  throw Error( 'Server Error' )
             }
             this.props.navigation.navigate( "Login" )
         })

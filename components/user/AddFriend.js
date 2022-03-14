@@ -231,7 +231,7 @@ class AddFriend extends Component {
              </View> 
              <View style = { styles.button }>
                 <Button
-                title="Back" 
+                title = "Back" 
                 color = "#DCDCDC"
                 onPress={ () => this.props.navigation.navigate("Profile" ) }/>
             </View> 

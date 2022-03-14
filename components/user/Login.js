@@ -1,12 +1,12 @@
 
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, Pressable } from 'react-native';
+import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const storeToken = async (value) => {
+const storeToken = async ( value ) => {
     try{
-        const jsonValue = JSON.stringify(value)
-        await AsyncStorage.setItem('@spacebook_details', jsonValue)
+        const jsonValue = JSON.stringify( value )
+        await AsyncStorage.setItem( '@spacebook_details', jsonValue )
     }
     catch(e) {
         console.error( error )
@@ -17,10 +17,9 @@ class LoginScreen extends Component {
     constructor( props ) {
         super( props );
         this.state = {
-            // I need to leave the email and password value empty after finishing the app test
-            // test3@mmu.co.uk hello123
-            email: 'test3@mmu.ac.uk',
-            password: 'hello123',
+
+            email: '',
+            password: '',
             error: '',
             confirmPassword:'',
             confirmEmail: ''
@@ -61,6 +60,7 @@ class LoginScreen extends Component {
         
           .then((json) => {
                 storeToken( json );
+                this.setState( { email: '', password: '' } )
                 this.props.navigation.navigate( "Home" )
           })
           
@@ -70,37 +70,37 @@ class LoginScreen extends Component {
       }
     render(){
         return(
-            <View style={styles.container}>
+            <View style = { styles.container }>
                 <View>
-                   <Text  style={styles.errorText}>{this.state.error}</Text>
+                   <Text  style = { styles.errorText}>{this.state.error }</Text>
                 </View>
                 
                 <View style = { styles.inputContainer }>
                     <Text style = { styles.text }>Enter email</Text>
                     <TextInput
-                        style={styles.inputField}
+                        style = { styles.inputField }
                         placeholder="e.g. hosni@gmail.com"
-                        onChangeText={(email) => this.setState({email})}
-                        value={this.state.email}
+                        onChangeText = { ( email ) => this.setState( { email } ) }
+                        value = { this.state.email }
                         />
                     <Text style = { styles.text }>Enter password</Text>
                     <TextInput 
-                        style={styles.inputField}
-                        placeholder="e.g. password"
-                        secureTextEntry={true}
-                        onChangeText={(password) => this.setState({password})}
-                        value={this.state.password}
+                        style = { styles.inputField }
+                        placeholder = "e.g. password"
+                        secureTextEntry = {true}
+                        onChangeText = { ( password ) => this.setState( { password } ) }
+                        value = { this.state.password }
                         />
                     </View>
-                    <View  style={styles.buttonContainer}>
-                        <View style={styles.button}>
+                    <View  style = { styles.buttonContainer }>
+                        <View style = { styles.button }>
                             <Button
                             color = "#DCDCDC"
                             title = 'Login'
                             onPress = { () => this.onLogin() }
                             />
                         </View>
-                        <View style={ styles.button }>
+                        <View style = { styles.button }>
                             <Button 
                             color = "#DCDCDC"
                             title = "Sign up" 

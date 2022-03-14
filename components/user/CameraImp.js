@@ -77,18 +77,18 @@ class AppCamera extends Component {
     render() {
         if(this.state.hasPermission){
             return(
-              <View style={ styles.container} >
+              <View style = { styles.container} >
                 <Camera 
-                  style={ styles.camera } 
-                  type={ this.state.type }
-                  ref={ref => this.camera = ref }>
-                  <View style={ styles.buttonContainer }>
+                  style = { styles.camera } 
+                  type = { this.state.type }
+                  ref = {ref => this.camera = ref }>
+                  <View style = { styles.buttonContainer }>
                     <TouchableOpacity
-                      style={ styles.button }
-                      onPress={ () => {
+                      style = { styles.button }
+                      onPress = { () => {
                         this.takePicture();
                       }}>
-                      <View><Text style={ styles.text }> Press here to take Photo </Text></View>
+                      <View><Text style = { styles.text }> Press here to take Photo </Text></View>
                     </TouchableOpacity>
                     <View><Text style = {styles.errorText }>{ this.state.error }</Text></View>
                   </View>

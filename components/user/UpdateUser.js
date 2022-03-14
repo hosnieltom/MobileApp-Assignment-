@@ -136,46 +136,54 @@ class UpdateUser extends Component {
 
     render(){
         return (
-            <View style={styles.container}> 
+            <View style = { styles.container }> 
                <View>
-                  <Text style={ styles.errorText }>{ this.state.error }</Text>
+                  <Text style = { styles.errorText }>{ this.state.error }</Text>
                </View>
-                <View style={styles.titleContainer}>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.titelText}>Update a User</Text>
+                <View style = { styles.titleContainer }>
+                    <View style = { styles.textContainer }>
+                      <Text style = { styles.titelText }>Update a User</Text>
                     </View>
 
                     <TextInput
-                        style={ styles.textInput }
-                        placeholder="Enter new first name..."
-                        onChangeText={(first_name) => this.setState({first_name})}
-                        value={this.state.first_name}/>
+                        style = { styles.textInput }
+                        placeholder = "Enter new first name..."
+                        onChangeText = { ( first_name ) => this.setState( { first_name } ) } 
+                        value = { this.state.first_name }/>
 
                     <TextInput
-                        style={ styles.textInput }
-                        placeholder="Enter new last name..."
-                        onChangeText={(last_name)=> this.setState({last_name})}
-                        value={this.state.last_name}/>
+                        style = { styles.textInput }
+                        placeholder = "Enter new last name..."
+                        onChangeText = { ( last_name ) => this.setState( { last_name } ) }
+                        value = { this.state.last_name }/>
 
                     <TextInput
-                        style={ styles.textInput }
-                        placeholder="Enter new email.."
-                        onChangeText={(email)=> this.setState({email})}
-                        value={this.state.email}/>
+                        style = { styles.textInput }
+                        placeholder = "Enter new email.."
+                        onChangeText = { ( email ) => this.setState( { email } ) }
+                        value = { this.state.email }/>
 
                     <TextInput
-                        style={ styles.textInput }
-                        placeholder="Enter new password..."
-                        secureTextEntry={true}
-                        onChangeText={(password)=> this.setState({password})}
-                        value={this.state.password}/>
+                        style = { styles.textInput }
+                        placeholder = "Enter new password..."
+                        secureTextEntry = {true}
+                        onChangeText = { ( password ) => this.setState( { password } ) }
+                        value = { this.state.password }/>
                 </View>
-                    <View style={styles.buttonContainer} >
-                        <Button  
-                        title="Update user"
-                        color = "#DCDCDC"
-                        onPress={()=> this.updateUser()}/>
-                    </View> 
+                    <View style = { styles.buttonsContainer }>
+                        <View style = { styles.buttonContainer }>
+                            <Button  
+                            title = "Update user"
+                            color = "#DCDCDC"
+                            onPress = { () => this.updateUser() }/>
+                        </View> 
+                        <View style = { styles.buttonContainer }>
+                                <Button 
+                                title = "Back" 
+                                color = "#DCDCDC"
+                                onPress = { () => this.props.navigation.navigate( "Profile") }/>
+                        </View>
+                    </View>
              </View>
         )
     }
@@ -227,8 +235,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 20,
         borderRadius:5,
-      borderWidth: 1,
-      borderColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#fff',
+        marginLeft:5,
+        height:35
+    },
+    buttonsContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
     },
   });
 

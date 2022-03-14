@@ -150,10 +150,16 @@ class FriendRequests extends Component {
                     <View style = { styles.textContainer }>
                         <Text style = { styles.titelText }>Requests</Text>
                     </View>
+                    <View style={styles.button}>
+                            <Button 
+                            title = "Back" 
+                            color = "#DCDCDC"
+                            onPress={ () => this.props.navigation.navigate( "Profile" ) }/>
+                    </View>
                     <View style = { styles.listContainer }>
                         <FlatList
                             data = { this.state.friend_requests }
-                            renderItem={ ( { item } ) => (
+                            renderItem = { ( { item } ) => (
                             <View>
                                 <Text style = { styles.text }>{ item.first_name } { item.last_name }</Text>
                                 <View style = { styles.buttonContainer }>

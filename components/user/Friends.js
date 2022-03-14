@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, ActivityIndicator, StyleSheet, FlatList, StatusBar, ScrollView } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet, FlatList, StatusBar,
+  Button, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -95,12 +96,18 @@ class Friends extends Component {
 
         const nav = this.props.navigation;
         const getProfile = ( user_id ) => {
-        nav.navigate( "Profile", {"user_id": user_id } )}
+        nav.navigate( "Profile", { "user_id": user_id } )}
 
         return(
-          <View style={ styles.container }>
-              <View>
-                  <Text style={ styles.titelText }>Friends</Text>
+          <View style = { styles.container }>
+              <View  style = { styles.buttonContainer }>
+                  <View><Text style = { styles.titelText }>Friends</Text></View>
+                  <View style = { styles.button }>
+                    <Button 
+                      title = "Back" 
+                      color = "#DCDCDC"
+                      onPress = {() => this.props.navigation.navigate( "Profile" ) }/>
+                  </View>
               </View>
                 <ScrollView style = { styles.scrollcontainer }>
                   <View style = { styles.listContainer }>
@@ -153,7 +160,22 @@ const styles = StyleSheet.create( {
         fontSize: 18,
         fontFamily: "Cochin",
         marginTop: 12,
-      }
+      },
+      button:{
+        marginRight:20,
+        marginLeft:20,
+        marginTop:10,
+        width: 80,
+        borderRadius:5,
+        borderWidth: 1,
+        borderColor: '#fff',
+        height:35
+      },
+      buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
   });
 
 export default Friends

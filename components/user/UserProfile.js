@@ -3,7 +3,6 @@ import { Text, Button, View, StyleSheet, FlatList,ActivityIndicator,Image, Statu
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableHighlight,ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
-
 class Profile extends Component {
 
     constructor( props ) {
@@ -373,7 +372,7 @@ class Profile extends Component {
                 <View style = { styles.updateContainer }>
                   <Button 
                       style = { styles.updateButton }
-                       title = "Edit prof"
+                       title = "Edit Info"
                        color = "#87CEFA"
                       onPress = { () => getInfo( this.state.user_information.user_id ) }/>
                 </View>
@@ -512,7 +511,6 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     padding: 14,
     borderRadius:10,
-    //borderWidth: 1,
     borderColor: '#fff',
     paddingLeft: 0
   },
@@ -588,7 +586,6 @@ const styles = StyleSheet.create({
     height: 30,
     },
     updateButton:{
-    //backgroundColor: "#009688",
     elevation: 8,
     borderRadius:10,
     borderWidth: 1,

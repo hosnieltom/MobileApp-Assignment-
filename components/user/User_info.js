@@ -1,6 +1,5 @@
 import React, {Component} from "react";
-import { Text, View, Button,TextInput,ToHideAndShowComponent,ActivityIndicator,
-     StyleSheet} from "react-native";
+import { Text, View, Button,ActivityIndicator, StyleSheet} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class UserInfo extends Component {
@@ -63,7 +62,7 @@ class UserInfo extends Component {
         })
       
     }
-
+    
     componentDidMount(){
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
         this.getData()
@@ -88,36 +87,35 @@ class UserInfo extends Component {
             )
         }
         else {
-            console.log("here", this.state)
             const nav = this.props.navigation;
             return (
-                <View style={styles.container}>
-                    <View style={styles.buttonDetails}>
+                <View style = { styles.container }>
+                    <View style = { styles.buttonDetails }>
                         <Button
-                         title="Take photo"
+                         title = "Take photo"
                          color = "#DCDCDC" 
-                        onPress={()=> nav.navigate("CameraImp")}/>
+                        onPress = { () => nav.navigate( "CameraImp" ) }/>
                     </View>
-                    <Text style={styles.titelText}>User details</Text>
+                    <Text style = { styles.titelText }>User details</Text>
                     <View>
-                        <Text style={styles.text}>User id: {this.state.user_information.user_id}</Text>
-                        <Text style={styles.text}>First name: {this.state.user_information.first_name}</Text>
-                        <Text style={styles.text}>Last name: {this.state.user_information.last_name}</Text>
-                        <Text style={styles.text}>email: {this.state.user_information.email}</Text>
-                        <Text style={styles.text}>friend_count: {this.state.user_information.friend_count}</Text>
+                        <Text style = { styles.text }>User id: { this.state.user_information.user_id }</Text>
+                        <Text style ={ styles.text }>First name: { this.state.user_information.first_name }</Text>
+                        <Text style = { styles.text }>Last name: { this.state.user_information.last_name }</Text>
+                        <Text style = { styles.text }>email: { this.state.user_information.email }</Text>
+                        <Text style = { styles.text }>friend_count: { this.state.user_information.friend_count }</Text>
                     </View>
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.buttonDetails}>
+                    <View style = { styles.buttonContainer }>
+                        <View style = { styles.buttonDetails }>
                             <Button 
-                            title="Edit details" 
+                            title = "Edit details" 
                             color = "#DCDCDC"
-                            onPress={()=> nav.navigate("UpdateUser")}/>
+                            onPress = { () => nav.navigate( "UpdateUser" )}/>
                         </View>
-                        <View style={styles.button}>
+                        <View style = { styles.button }>
                             <Button 
-                            title="Back" 
+                            title = "Back" 
                             color = "#DCDCDC"
-                            onPress={()=> this.props.navigation.navigate("Profile")}/>
+                            onPress = {() => this.props.navigation.navigate( "Profile" ) }/>
                         </View>
                     </View>
                 </View> 

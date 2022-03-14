@@ -13,11 +13,11 @@ class Home extends Component{
         
         return (
             
-            <Drawer.Navigator initialRouteName="Profile">
-                <Drawer.Screen name="Logout" component={Logout}/>
-                <Drawer.Screen name="User_info" component={User_info}/>
-                <Drawer.Screen name="CameraImp" component={CameraImp}/>
-                <Drawer.Screen name="Profile" component={ProfileStack}/>
+            <Drawer.Navigator initialRouteName = "Profile">
+                <Drawer.Screen name = "Logout" component = { Logout }/>
+                <Drawer.Screen name = "User_info" component = { User_info }/>
+                <Drawer.Screen name = "CameraImp" component = { CameraImp }/>
+                <Drawer.Screen name = "Profile" component = { ProfileStack }/>
             </Drawer.Navigator>
         )
     }
